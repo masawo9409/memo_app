@@ -17,7 +17,7 @@ class MemoController extends Controller
     {
         return view('memos.create');
     }
-
+    // $requestにRequest型の変数が入ってくると、Requestクラスのメソッドが使用できるようになる
     public function store(Request $request)
     {
         // インスタンスの作成
@@ -39,4 +39,34 @@ class MemoController extends Controller
         $memo = Memo::find($id);
         return view('memos.show', ['memo' => $memo]);
     }
+
+    public function edit($id) 
+    {
+        $memo = Memo::find($id);
+        return view('memos.edit', ['memo' => $memo]);
+    }
+
+    public function update(Request $request, $id) 
+    {
+        // ここはidで探して持ってくる以外はstoreと同じ
+        $memo = Memo::find($id);
+
+        // 値の用意
+        $memo->title = $request->title;
+        $memo->body = $request->body;
+
+        // 保存
+        $memo->save();
+
+        // 登録したらindexに戻る
+        return redirect('/memos');
+    }
+    public function destroy($id)
+    {
+        $memo = Memo::find($id);
+        $memo->delete();
+
+        return redirect('/memos');
+    }
+
 }
